@@ -44,8 +44,71 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    EmptyScreen()
+                    MainScreen()
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun MainScreen() {
+    var heartRate by remember { mutableStateOf("") }
+    var dateTime by remember { mutableStateOf("") }
+    val dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+
+    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        // Input Fields
+        OutlinedTextField(
+            value = heartRate,
+            onValueChange = { if (it.isEmpty() || it.toIntOrNull() in 1..300) heartRate = it },
+            label = { Text("Heart Rate (1-300 bpm)") },
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = dateTime,
+            onValueChange = { dateTime = it },
+            label = { Text("Date/Time (yyyy-MM-dd HH:mm)") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Buttons
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Button(
+                onClick = { /* TODO: Implement load functionality */ },
+                modifier = Modifier.weight(1f)
+            ) { Text("Load") }
+
+            Button(
+                onClick = { /* TODO: Implement save functionality */ },
+                modifier = Modifier.weight(1f)
+            ) { Text("Save") }
+        }
+
+        // Placeholder for Heart Rate History
+        Text(
+            "Heart Rate History",
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(vertical = 8.dp)
+        )
+
+        // About Section
+        Card(
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Text("About", style = MaterialTheme.typography.titleMedium)
+                Text("Student Name: Your Name")
+                Text("Student ID: Your ID")
             }
         }
     }
