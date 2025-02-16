@@ -44,90 +44,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen()
+                    MainScreen(viewModel)
                 }
             }
         }
     }
-}
-
-@Composable
-fun MainScreen() {
-    val context = LocalContext.current
-    var healthConnectClient by remember { mutableStateOf<HealthConnectClient?>(null) }
-    var permissionsGranted by remember { mutableStateOf(false) }
-    var showError by remember { mutableStateOf<String?>(null) }
-
-    val permissions = remember {
-        setOf(
-            HealthPermission.getReadPermission(HeartRateRecord::class),
-            HealthPermission.getWritePermission(HeartRateRecord::class)
-        )
-    }
-
-    LaunchedEffect(Unit) {
-        try {
-            healthConnectClient = HealthConnectClient.getOrCreate(context)
-            val granted = healthConnectClient?.permissionController?.getGrantedPermissions()
-            permissionsGranted = granted?.containsAll(permissions) == true
-        } catch (e: Exception) {
-            showError = "Error: ${e.message}"
-        }
-    }
-
-    when {
-        healthConnectClient == null -> {
-            Text("Initializing Health Connect...")
-        }
-        !permissionsGranted -> {
-            Column(
-                modifier = Modifier.fillMaxSize().padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text("Health Connect permissions are required")
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = {
-                        try {
-                            val intent = Intent().apply {
-                                action = "androidx.health.ACTION_HEALTH_CONNECT_SETTINGS"
-                            }
-                            context.startActivity(intent)
-                        } catch (e: Exception) {
-                            showError = "Error opening Health Connect settings: ${e.message}"
-                        }
-                    }
-                ) {
-                    Text("Open Health Connect Settings")
-                }
-            }
-        }
-        else -> {
-            healthConnectClient?.let { client ->
-                HeartRateScreen(client, viewModel)
-            }
-        }
-    }
-
-    // Error dialog
-    showError?.let { error ->
-        AlertDialog(
-            onDismissRequest = { showError = null },
-            title = { Text("Error") },
-            text = { Text(error) },
-            confirmButton = {
-                Button(onClick = { showError = null }) {
-                    Text("OK")
-                }
-            }
-        )
-    }
-}
-
-@Composable
-fun EmptyScreen() {
-    Text("Assignment 2 - Health Connect")
 }
 
 @Composable
@@ -221,6 +142,11 @@ fun MainScreen(viewModel: HealthConnectViewModel) {
             }
         )
     }
+}
+
+@Composable
+fun EmptyScreen() {
+    Text("Assignment 2 - Health Connect")
 }
 
 @Composable
