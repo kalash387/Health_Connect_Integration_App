@@ -58,6 +58,7 @@ fun MainScreen(viewModel: HealthConnectViewModel) {
     var permissionsGranted by remember { mutableStateOf(false) }
     var showError by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
+    val error by viewModel.error.collectAsState()
 
     val permissions = remember {
         setOf(
