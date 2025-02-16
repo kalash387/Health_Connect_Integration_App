@@ -57,6 +57,7 @@ class HealthConnectViewModel : ViewModel() {
 
     suspend fun loadHeartRates(healthConnectClient: HealthConnectClient) {
         try {
+            // Create a time range filter for the last 24 hours
             val endTime = ZonedDateTime.now().toInstant()
             val startTime = endTime.minus(24, ChronoUnit.HOURS)
             

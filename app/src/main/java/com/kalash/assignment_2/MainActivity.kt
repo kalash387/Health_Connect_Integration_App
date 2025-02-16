@@ -58,7 +58,6 @@ fun MainScreen(viewModel: HealthConnectViewModel) {
     var permissionsGranted by remember { mutableStateOf(false) }
     var showError by remember { mutableStateOf<String?>(null) }
     val scope = rememberCoroutineScope()
-    val error by viewModel.error.collectAsState()
 
     val permissions = remember {
         setOf(
@@ -146,11 +145,6 @@ fun MainScreen(viewModel: HealthConnectViewModel) {
 }
 
 @Composable
-fun EmptyScreen() {
-    Text("Assignment 2 - Health Connect")
-}
-
-@Composable
 fun LoadingScreen() {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -205,11 +199,7 @@ fun HeartRateScreen(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Button(
-                onClick = { 
-                    scope.launch {
-                        viewModel.loadHeartRates(healthConnectClient)
-                    }
-                },
+                onClick = { scope.launch { viewModel.loadHeartRates(healthConnectClient) } },
                 modifier = Modifier.weight(1f)
             ) { Text("Load") }
 
@@ -295,16 +285,14 @@ fun HeartRateScreen(
         }
     }
 
-    // Error dialog
+    // Error Dialog
     error?.let { errorMsg ->
         AlertDialog(
             onDismissRequest = { viewModel.clearError() },
             title = { Text("Error") },
             text = { Text(errorMsg) },
             confirmButton = {
-                Button(onClick = { viewModel.clearError() }) {
-                    Text("OK")
-                }
+                Button(onClick = { viewModel.clearError() }) { Text("OK") }
             }
         )
     }
