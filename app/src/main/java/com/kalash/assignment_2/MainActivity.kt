@@ -205,7 +205,11 @@ fun HeartRateScreen(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Button(
-                onClick = { scope.launch { viewModel.loadHeartRates(healthConnectClient) } },
+                onClick = { 
+                    scope.launch {
+                        viewModel.loadHeartRates(healthConnectClient)
+                    }
+                },
                 modifier = Modifier.weight(1f)
             ) { Text("Load") }
 
@@ -291,14 +295,16 @@ fun HeartRateScreen(
         }
     }
 
-    // Error Dialog
+    // Error dialog
     error?.let { errorMsg ->
         AlertDialog(
             onDismissRequest = { viewModel.clearError() },
             title = { Text("Error") },
             text = { Text(errorMsg) },
             confirmButton = {
-                Button(onClick = { viewModel.clearError() }) { Text("OK") }
+                Button(onClick = { viewModel.clearError() }) {
+                    Text("OK")
+                }
             }
         )
     }
